@@ -4,7 +4,11 @@ Proprietary and confidential. Brand operating system for The Concrete Group — 
 
 ## Status
 
-Phase 5 of 5 complete: repo scaffold, token system, logo alpha masters, component library, editorial guidelines site, applications, governance.
+Phase 5 of 5 complete: repo scaffold, token system, logo alpha masters, component library, editorial guidelines site, applications, governance, light/dark toggle, accessibility audit.
+
+**Live for external audit:** https://unclepauliees.github.io/concrete-group-brand-os/ · applications: https://unclepauliees.github.io/concrete-group-brand-os/applications.html
+
+This repo is mirrored to a separate public GitHub repository (`unclepauliees/concrete-group-brand-os`) specifically so it can be reviewed without local setup — despite the confidentiality note below, that mirror and its Pages site are intentionally public at the owner's request. `.github/workflows/pages.yml` redeploys on every push to `main`.
 
 ## Quick start
 
@@ -92,6 +96,10 @@ Clearspace ≥ ring radius on all sides. Minimum size and the misuse set (recolo
 
 `apps/guidelines/src/App.tsx` — a single-page scroll: a full-bleed ink cover (wordmark lockup, no rail clearance) followed by seven Roman-numeral sections — I. Positioning, II. Colour, III. Typography, IV. Logo, V. Motion, VI. Components, VII. Contrast & Accessibility — alternating bone, green, and ink grounds. A fixed left rail (desktop only, `lg:` and up) tracks scroll position via `IntersectionObserver` and lets you jump to any section; the numbered sections carry `lg:pl-96` so their content never sits underneath the fixed rail.
 
+A fixed top-right `ThemeToggle` swaps bone↔ink across every section's own ground for a Light/Dark version of the whole site, without flattening the designed alternation — house green stays the chromatic constant either way, and grounds that exist purely to demonstrate the three canonical tokens (the logo's ink/bone/green trio, swatches, ramps, the contrast audit's fixed pairs) stay literal on purpose, since inverting those would misrepresent the tokens they're documenting.
+
+The site carries a real heading outline for screen readers — `SectionHeader`'s label renders as an `<h2>` (the Roman numeral is `aria-hidden`, redundant with heading order) and the cover's `WordmarkLockup` renders `as="h1"` — plus a `<main>` landmark. `Applications.tsx` follows the same rule: each application's name (`Frame`'s caption) is the real `<h2>`; illustrative mockup copy inside a frame (e.g. `[Property Name]`) is a plain `<p>`, since it's sample content, not page structure.
+
 ## Applications
 
 `apps/guidelines/src/Applications.tsx`, served at `applications.html` (a separate Vite entry point — `vite.config.ts` lists both `index.html` and `applications.html` under `build.rollupOptions.input`, so `npm run build` produces both). Six placements, every one composed from the same components and tokens as the guidelines site:
@@ -119,6 +127,12 @@ Bodoni Moda, Cormorant Garamond, and Jost are loaded as free Google Fonts stand-
 ## Consuming tokens downstream
 
 Import `packages/tokens/dist/tokens.css` once at the app root; every component reads CSS custom properties from it. Tailwind (in `apps/guidelines/tailwind.config.ts`) maps utility classes to these same variables as the pattern to follow in any other consuming app — `colors.green[500] = "var(--green-500)"`, never a literal hex. `packages/tokens/dist/tokens.resolved.json` is the flat equivalent for non-Tailwind consumers (a Figma Tokens plugin import, a different design tool, a native app's own token layer).
+
+## Deploying to GitHub Pages
+
+`.github/workflows/pages.yml` runs `npm run build` with `GITHUB_PAGES=true` and deploys `apps/guidelines/dist` on every push to `main`. That env var matters: GitHub Pages serves a project repo (as opposed to a `<user>.github.io` root repo) from `/<repo-name>/`, not domain root, so `apps/guidelines/vite.config.ts` sets Vite's `base` to `/concrete-group-brand-os/` only when `GITHUB_PAGES` is set — local dev and any other deploy target stay at `/`.
+
+This caught a real bug before it shipped: `MonogramStage` and `MisuseGallery` referenced the logo PNGs by a hardcoded root-absolute `src` (`"/logo/monogram-ink.png"`). Vite rewrites asset URLs it can statically analyze (an `import`), but a plain string in `src` is invisible to that pass — under the Pages subpath every monogram image would have 404'd. Fixed by building the path from `import.meta.env.BASE_URL` instead; verified against a real `vite preview --base /concrete-group-brand-os/` build before deploying. If you add another public-directory asset referenced by a literal path string anywhere in `packages/ui`, use the same pattern.
 
 ## Known environment hazard
 
