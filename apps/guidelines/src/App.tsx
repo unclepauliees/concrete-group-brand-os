@@ -5,6 +5,7 @@ import {
   SectionHeader,
   WordmarkLockup,
   MonogramStage,
+  MisuseGallery,
   EndorsementLockup,
   DropCap,
   PullQuote,
@@ -218,9 +219,12 @@ export default function App() {
           <Reveal delayMs={350} className="mt-12">
             <LaneIndexRow label="Clearspace" value="≥ ring radius" />
             <LaneIndexRow label="Approved grounds" value="Ink, bone, house green" />
-            <LaneIndexRow label="Never" value="Recolour, distort, rotate, low-opacity" />
           </Reveal>
           <Reveal delayMs={450} className="mt-16">
+            <span className="font-label text-label uppercase text-tx3 block mb-4">Misuse</span>
+            <MisuseGallery />
+          </Reveal>
+          <Reveal delayMs={550} className="mt-16">
             <EndorsementLockup ground="green" />
           </Reveal>
         </div>

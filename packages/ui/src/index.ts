@@ -6,6 +6,7 @@ export { GroundSection, type Ground } from "./components/GroundSection";
 export { SectionHeader } from "./components/SectionHeader";
 export { WordmarkLockup } from "./components/WordmarkLockup";
 export { MonogramStage } from "./components/MonogramStage";
+export { MisuseGallery } from "./components/MisuseGallery";
 export { EndorsementLockup } from "./components/EndorsementLockup";
 export { DropCap } from "./components/DropCap";
 export { PullQuote } from "./components/PullQuote";
