@@ -2,6 +2,7 @@ export { toRoman } from "./roman";
 export { contrastRatio, verdict } from "./contrast";
 
 export { Reveal } from "./components/Reveal";
+export { GroundSection, type Ground } from "./components/GroundSection";
 export { SectionHeader } from "./components/SectionHeader";
 export { WordmarkLockup } from "./components/WordmarkLockup";
 export { MonogramStage } from "./components/MonogramStage";

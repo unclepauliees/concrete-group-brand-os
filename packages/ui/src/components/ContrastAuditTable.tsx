@@ -35,7 +35,7 @@ export function ContrastAuditTable({ className = "" }: { className?: string }) {
           return (
             <tr key={r.label} className="border-b border-line">
               <td className="py-3 text-tx2 normal-case font-text text-text tracking-normal">{r.label}</td>
-              <td className="py-3 text-ink">{r.ratio.toFixed(2)}:1</td>
+              <td className="py-3 text-tx">{r.ratio.toFixed(2)}:1</td>
               <td className={`py-3 ${v === "fail" ? "text-gilt-700" : "text-green-700"}`}>{v}</td>
             </tr>
           );

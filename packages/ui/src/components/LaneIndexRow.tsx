@@ -9,7 +9,7 @@ export function LaneIndexRow({ label, value, className = "" }: LaneIndexRowProps
   return (
     <div className={`flex items-baseline justify-between border-b border-line py-4 ${className}`}>
       <span className="font-label text-label uppercase text-tx3">{label}</span>
-      <span className="font-display italic text-display-3 text-ink">{value}</span>
+      <span className="font-display italic text-display-3 text-tx">{value}</span>
     </div>
   );
 }

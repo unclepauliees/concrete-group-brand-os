@@ -4,33 +4,39 @@ Proprietary and confidential. Brand operating system for The Concrete Group — 
 
 ## Status
 
-Phase 3 of 5 complete: repo scaffold, token system, logo alpha masters, component library.
+Phase 4 of 5 complete: repo scaffold, token system, logo alpha masters, component library, editorial guidelines site.
 
 ## Structure
 
 ```
 packages/tokens/   Single source of truth. tokens.json (Style Dictionary shape) -> dist/tokens.css + dist/tokens.resolved.json
 packages/ui/        Component library — hairline components, wired to tokens only
-apps/guidelines/     Vite/React/TS host app. Currently a component showcase; becomes the full editorial site in Phase 4
+apps/guidelines/     The guidelines site itself: cover + I–VII, Roman-numeral rail, alternating grounds
 assets/logo/source/   Approved artwork, untouched. Do not edit or redraw.
 assets/logo/generated/ Alpha-keyed masters, built by scripts/build-logo-masters.mjs
 ```
 
-## Running the showcase
+## Running the site
 
 ```
 npm run dev
 ```
 
-Builds tokens, builds/syncs logo masters, and starts the Vite dev server for `apps/guidelines` at `http://localhost:5173`.
+Builds tokens, builds/syncs logo masters, and starts the Vite dev server for `apps/guidelines` at `http://localhost:5173`. `npm run build` produces the static production build (`apps/guidelines/dist`).
+
+The site is a single-page scroll: a full-bleed ink cover (wordmark lockup, no rail clearance) followed by seven Roman-numeral sections — I. Positioning, II. Colour, III. Typography, IV. Logo, V. Motion, VI. Components, VII. Contrast & Accessibility — alternating bone, green, and ink grounds. A fixed left rail (desktop only, `lg:` and up) tracks scroll position via `IntersectionObserver` and lets you jump to any section.
 
 ## Component library
 
 `packages/ui/src` — every component reads Tailwind utilities that resolve to `var(--token)`, never a literal value. Exported from `packages/ui/src/index.ts`:
 
-`Reveal` (motion primitive, honors `prefers-reduced-motion`), `SectionHeader`, `WordmarkLockup`, `MonogramStage`, `EndorsementLockup`, `DropCap`, `PullQuote`, `TwoColumnBody`, `LaneIndexRow`, `StatisticBlock`, `HairlineDivider`, `Button`, `SwatchGrid`, `RampStrip`, `ContrastAuditTable`, `TypeSpecimenRow`, `RailNav`.
+`Reveal` (motion primitive, honors `prefers-reduced-motion`), `GroundSection`, `SectionHeader`, `WordmarkLockup`, `MonogramStage`, `EndorsementLockup`, `DropCap`, `PullQuote`, `TwoColumnBody`, `LaneIndexRow`, `StatisticBlock`, `HairlineDivider`, `Button`, `SwatchGrid`, `RampStrip`, `ContrastAuditTable`, `TypeSpecimenRow`, `RailNav`.
+
+`GroundSection` is what makes "dark and green are section grounds, not themes" (per the brief) actually work: it re-declares the semantic layer (`--bg`/`--tx`/`--tx2`/`--tx3`/`--line`/`--line-strong`) as CSS custom properties scoped to that section. Every other component already reads those same names, so nothing downstream needs its own `ground` prop to invert correctly — ordinary CSS custom property inheritance does it. `SectionHeader`, `WordmarkLockup`, `MonogramStage`, `EndorsementLockup`, and `RailNav` additionally accept an explicit `ground` prop where a fixed brand color (the gilt numeral, the monogram's ink/bone master) needs to change per ground rather than just inherit — a single gilt shade cannot clear AA on all three grounds simultaneously (computed: gilt-500 on green-500 is 2.74:1), so those pick a ground-appropriate shade.
 
 `ContrastAuditTable` computes WCAG ratios live from the resolved DOM values of the CSS custom properties (`packages/ui/src/contrast.ts`) rather than a hardcoded hex table, so the audit can't silently drift from the token source. Verified output matches the brief's contrast law exactly: gilt-500/bone fails (2.82:1), gilt-700/bone passes AA normal (5.36:1), green-500/bone passes AA normal (7.73:1), stone-500/bone is large-text only (3.32:1), bone/ink and bone/green-500 both clear comfortably.
+
+**`RailNav` does not use `mix-blend-mode: difference`, despite that being the brief's original spec.** It was tried first and looked correct in isolation, but on this page — a fixed-position overlay over several independently-scrolled, differently-colored sections — Chrome silently drops the blend once the scrolled content is promoted to separate compositing layers, which this layout reliably triggers. The failure mode is invisible text (bone-on-bone) with no console error. `RailNav` instead takes an explicit `ground` prop and sets a plain color from it; the app already knows the active ground from scroll-spy, so this is deterministic rather than relying on a compositing behavior this layout defeats.
 
 **Known environment hazard:** an unrelated Nuxt/Vue project lives at `~/tsconfig.json` (outside this repo). Vite's tsconfig resolution walks up the directory tree for any file lacking a local tsconfig and will pick up that project's `jsxImportSource: "vue"` if it reaches that far — this broke the initial build (React children rendered as Vue vnodes) until `packages/ui/tsconfig.json` and a root `tsconfig.json` were added to stop the walk. Do not delete either file.
 

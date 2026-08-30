@@ -42,10 +42,8 @@
   }
 
   .tcg-rail-item {
-    mix-blend-mode: difference;
-    color: var(--bone);
     letter-spacing: var(--label-tracking-rest);
-    transition: letter-spacing var(--reveal-duration) var(--e);
+    transition: letter-spacing var(--reveal-duration) var(--e), color var(--reveal-duration) var(--e);
   }
   .tcg-rail-item[data-active="true"] {
     letter-spacing: var(--label-tracking-active);
