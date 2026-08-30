@@ -2,6 +2,7 @@ export { toRoman } from "./roman";
 export { contrastRatio, verdict } from "./contrast";
 
 export { Reveal } from "./components/Reveal";
+export { ThemeToggle } from "./components/ThemeToggle";
 export { GroundSection, type Ground } from "./components/GroundSection";
 export { SectionHeader } from "./components/SectionHeader";
 export { WordmarkLockup } from "./components/WordmarkLockup";

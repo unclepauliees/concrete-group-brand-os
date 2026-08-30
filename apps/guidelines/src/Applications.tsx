@@ -16,14 +16,19 @@ type FrameProps = PropsWithChildren<{
   aspect: string;
 }>;
 
-/** Proportionally accurate preview, not a pixel-exact export — the deliverable
- * is the composition (real components, real tokens), not a rendered PNG. */
+/**
+ * Proportionally accurate preview, not a pixel-exact export — the deliverable
+ * is the composition (real components, real tokens), not a rendered PNG.
+ * The caption's name is a real <h2> (this page's six actual sections); the
+ * illustrative copy inside the frame is sample content, not page structure,
+ * so it stays out of the heading outline — see the h2->p swaps below.
+ */
 function Frame({ name, dimensions, aspect, children }: FrameProps) {
   return (
     <div>
       <div className={`border border-line overflow-hidden ${aspect}`}>{children}</div>
       <div className="flex items-baseline justify-between mt-4">
-        <span className="font-label text-label uppercase text-tx2">{name}</span>
+        <h2 className="font-label text-label uppercase text-tx2 m-0">{name}</h2>
         <span className="font-label text-label uppercase text-tx3">{dimensions}</span>
       </div>
     </div>
@@ -33,7 +38,7 @@ function Frame({ name, dimensions, aspect, children }: FrameProps) {
 export default function Applications() {
   return (
     <GroundSection ground="bone" className="min-h-screen px-8 md:px-24 py-24">
-      <div className="max-w-[1400px] mx-auto">
+      <main className="max-w-[1400px] mx-auto">
         <Reveal>
           <h1 className="font-display text-display-2 text-tx">Applications</h1>
           <p className="font-text text-text text-tx2 mt-6 max-w-2xl">
@@ -62,9 +67,9 @@ export default function Applications() {
               <GroundSection ground="green" className="w-full h-full flex flex-col justify-between p-10">
                 <span className="font-label text-label uppercase text-tx3">Proposal</span>
                 <div>
-                  <h2 className="font-display italic text-display-3 text-tx leading-tight">
+                  <p className="font-display italic text-display-3 text-tx leading-tight">
                     A house built on structural permanence.
-                  </h2>
+                  </p>
                   <div className="mt-10">
                     <EndorsementLockup ground="green" />
                   </div>
@@ -91,7 +96,7 @@ export default function Applications() {
             <Frame name="Client-property microsite hero" dimensions="16 × 7" aspect="aspect-[16/7]">
               <GroundSection ground="ink" className="w-full h-full flex flex-col justify-between p-10 md:p-16">
                 <EndorsementLockup ground="ink" />
-                <h2 className="font-display text-display-1 text-tx leading-none">[Property Name]</h2>
+                <p className="font-display text-display-1 text-tx leading-none">[Property Name]</p>
               </GroundSection>
             </Frame>
           </Reveal>
@@ -147,7 +152,7 @@ export default function Applications() {
             </Frame>
           </Reveal>
         </div>
-      </div>
+      </main>
     </GroundSection>
   );
 }

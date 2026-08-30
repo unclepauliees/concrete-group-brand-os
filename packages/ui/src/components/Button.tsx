@@ -7,9 +7,11 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const BASE =
   "font-label text-label uppercase px-8 py-4 rounded-none transition-colors duration-300 tracking-[.34em]";
 
+// tx/bg (not the ink/bone constants) so a button always contrasts against
+// whatever ground it's rendered in, including an inverted ground.
 const VARIANTS: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  fill: "bg-ink text-bone hover:bg-green-700",
-  line: "border border-ink text-ink hover:bg-ink hover:text-bone",
+  fill: "bg-tx text-bg hover:bg-green-700 hover:text-bone",
+  line: "border border-tx text-tx hover:bg-tx hover:text-bg",
 };
 
 export function Button({ variant = "fill", className = "", ...props }: ButtonProps) {
