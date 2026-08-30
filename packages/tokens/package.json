@@ -1,0 +1,10 @@
+{
+  "name": "@tcg/tokens",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/tokens.css",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}
