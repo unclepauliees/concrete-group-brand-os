@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "tokens:build": "npm run build -w @tcg/tokens",
-    "logo:build": "node scripts/build-logo-masters.mjs",
+    "logo:build": "node scripts/build-logo-masters.mjs && node scripts/sync-logo-to-public.mjs",
     "dev": "npm run tokens:build && npm run logo:build && npm run dev -w @tcg/guidelines",
     "build": "npm run tokens:build && npm run logo:build && npm run build -w @tcg/guidelines"
   },

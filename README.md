@@ -4,17 +4,35 @@ Proprietary and confidential. Brand operating system for The Concrete Group — 
 
 ## Status
 
-Phase 2 of 5 complete: repo scaffold, token system, logo alpha masters.
+Phase 3 of 5 complete: repo scaffold, token system, logo alpha masters, component library.
 
 ## Structure
 
 ```
 packages/tokens/   Single source of truth. tokens.json (Style Dictionary shape) -> dist/tokens.css + dist/tokens.resolved.json
-packages/ui/        Component library (not yet built — Phase 3)
-apps/guidelines/     Editorial guidelines site (not yet built — Phase 4)
+packages/ui/        Component library — hairline components, wired to tokens only
+apps/guidelines/     Vite/React/TS host app. Currently a component showcase; becomes the full editorial site in Phase 4
 assets/logo/source/   Approved artwork, untouched. Do not edit or redraw.
 assets/logo/generated/ Alpha-keyed masters, built by scripts/build-logo-masters.mjs
 ```
+
+## Running the showcase
+
+```
+npm run dev
+```
+
+Builds tokens, builds/syncs logo masters, and starts the Vite dev server for `apps/guidelines` at `http://localhost:5173`.
+
+## Component library
+
+`packages/ui/src` — every component reads Tailwind utilities that resolve to `var(--token)`, never a literal value. Exported from `packages/ui/src/index.ts`:
+
+`Reveal` (motion primitive, honors `prefers-reduced-motion`), `SectionHeader`, `WordmarkLockup`, `MonogramStage`, `EndorsementLockup`, `DropCap`, `PullQuote`, `TwoColumnBody`, `LaneIndexRow`, `StatisticBlock`, `HairlineDivider`, `Button`, `SwatchGrid`, `RampStrip`, `ContrastAuditTable`, `TypeSpecimenRow`, `RailNav`.
+
+`ContrastAuditTable` computes WCAG ratios live from the resolved DOM values of the CSS custom properties (`packages/ui/src/contrast.ts`) rather than a hardcoded hex table, so the audit can't silently drift from the token source. Verified output matches the brief's contrast law exactly: gilt-500/bone fails (2.82:1), gilt-700/bone passes AA normal (5.36:1), green-500/bone passes AA normal (7.73:1), stone-500/bone is large-text only (3.32:1), bone/ink and bone/green-500 both clear comfortably.
+
+**Known environment hazard:** an unrelated Nuxt/Vue project lives at `~/tsconfig.json` (outside this repo). Vite's tsconfig resolution walks up the directory tree for any file lacking a local tsconfig and will pick up that project's `jsxImportSource: "vue"` if it reaches that far — this broke the initial build (React children rendered as Vue vnodes) until `packages/ui/tsconfig.json` and a root `tsconfig.json` were added to stop the walk. Do not delete either file.
 
 ## Tokens
 

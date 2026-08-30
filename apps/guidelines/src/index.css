@@ -1,0 +1,61 @@
+@import "@tcg/tokens/tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    background: var(--bone);
+    color: var(--ink);
+  }
+  body {
+    font-family: var(--f-text);
+    font-weight: 300;
+  }
+  ::selection {
+    background: var(--gilt-500);
+    color: var(--ink);
+  }
+}
+
+/* Editorial devices that don't reduce cleanly to Tailwind utilities. */
+@layer components {
+  .tcg-drop-cap::first-letter {
+    font-family: var(--f-display);
+    font-size: 4.6em;
+    line-height: 0.78;
+    float: left;
+    padding-right: 0.08em;
+    padding-top: 0.04em;
+    color: var(--gilt-700);
+  }
+
+  .tcg-pull-quote {
+    font-family: var(--f-display);
+    font-style: italic;
+    border-top: var(--hairline) solid var(--line);
+    border-bottom: var(--hairline) solid var(--line);
+  }
+
+  .tcg-rail-item {
+    mix-blend-mode: difference;
+    color: var(--bone);
+    letter-spacing: var(--label-tracking-rest);
+    transition: letter-spacing var(--reveal-duration) var(--e);
+  }
+  .tcg-rail-item[data-active="true"] {
+    letter-spacing: var(--label-tracking-active);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcg-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
