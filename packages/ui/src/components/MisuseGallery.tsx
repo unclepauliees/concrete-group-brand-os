@@ -19,7 +19,7 @@ export function MisuseGallery({ className = "" }: { className?: string }) {
         <div key={c.label} className="bg-bone-pure p-8 flex flex-col items-center gap-6">
           <div className="relative w-24 h-24 flex items-center justify-center">
             <img
-              src="/logo/monogram-ink.png"
+              src={`${import.meta.env.BASE_URL}logo/monogram-ink.png`}
               alt=""
               aria-hidden
               className="w-full h-full object-contain"

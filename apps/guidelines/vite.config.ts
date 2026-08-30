@@ -5,7 +5,13 @@ import { fileURLToPath } from "node:url";
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
+// GitHub Pages serves a project site (not a *.github.io root repo) from
+// /<repo-name>/, so every asset URL needs that prefix in production. Local
+// dev and any other deploy target stay at root.
+const base = process.env.GITHUB_PAGES ? "/concrete-group-brand-os/" : "/";
+
 export default defineConfig({
+  base,
   plugins: [react()],
   resolve: {
     alias: {

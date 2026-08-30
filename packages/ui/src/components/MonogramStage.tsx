@@ -11,10 +11,14 @@ const GROUND_BG: Record<NonNullable<MonogramStageProps["ground"]>, string> = {
   green: "bg-green-500",
 };
 
+// import.meta.env.BASE_URL, not a hardcoded root-absolute path — a
+// root-absolute src breaks under a non-root Vite `base` (e.g. GitHub Pages
+// project sites, served from /<repo-name>/).
+const base = import.meta.env.BASE_URL;
 const MARK_SRC: Record<NonNullable<MonogramStageProps["ground"]>, string> = {
-  bone: "/logo/monogram-ink.png",
-  ink: "/logo/monogram-bone.png",
-  green: "/logo/monogram-bone.png",
+  bone: `${base}logo/monogram-ink.png`,
+  ink: `${base}logo/monogram-bone.png`,
+  green: `${base}logo/monogram-bone.png`,
 };
 
 /** Monogram on its governed ground, with an optional clearspace guide (radius of the ring). */
