@@ -61,24 +61,23 @@ function useScrollSpy(ids: string[]) {
 export default function App() {
   const ids = SECTIONS.map((s) => s.id);
   const activeIndex = useScrollSpy(ids);
-  const baseGround = activeIndex === -1 ? "ink" : SECTIONS[activeIndex].ground;
   const prefersReducedMotion = useRef(
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ).current;
 
-  // Dark version swaps bone<->ink everywhere the page's own chrome uses
-  // them, preserving the designed alternation's rhythm rather than
-  // flattening it — house green stays the chromatic constant either way.
-  // Grounds used purely to demonstrate the three canonical tokens (the
-  // logo's ink/bone/green trio, swatches, ramps) stay literal on purpose.
+  // The Light version reads as light throughout; the Dark version reads as
+  // dark throughout — no alternating rhythm to invert, no mixed-mode pages.
+  // House green is the one fixed brand constant that holds in both: the
+  // Logo section stays green regardless of theme.
   const [dark, setDark] = useState(
     () => typeof window !== "undefined" && localStorage.getItem("tcg-dark") === "true"
   );
   useEffect(() => {
     localStorage.setItem("tcg-dark", String(dark));
   }, [dark]);
-  const invert = (g: Ground): Ground => (dark ? (g === "bone" ? "ink" : g === "ink" ? "bone" : g) : g);
-  const activeGround = invert(baseGround);
+  const theme: Ground = dark ? "ink" : "bone";
+  const activeGround: Ground =
+    activeIndex !== -1 && SECTIONS[activeIndex].ground === "green" ? "green" : theme;
 
   const scrollTo = (index: number) => {
     document.getElementById(ids[index])?.scrollIntoView({
@@ -88,7 +87,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen">
+    // The lg:pl-96 gutter reserved for the fixed rail sits outside every
+    // GroundSection's own background, so it always shows whatever this root
+    // element paints — without this it stayed bone (the CSS default) even in
+    // Dark, leaving a persistent light strip down the page.
+    <div className="min-h-screen" style={{ background: `var(--${theme})` }}>
       <a
         href="#positioning"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:bg-bone focus:text-ink focus:px-4 focus:py-2 font-label text-label uppercase"
@@ -125,9 +128,9 @@ export default function App() {
       <main className="pb-14 lg:pb-0">
       {/* Cover — full-bleed, not offset for rail clearance; the rail floats
           over it exactly as it does over any other ground. */}
-      <GroundSection ground={invert("ink")} className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
+      <GroundSection ground={theme} className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
         <Reveal>
-          <WordmarkLockup as="h1" ground={invert("ink")} className="text-center" />
+          <WordmarkLockup as="h1" ground={theme} className="text-center" />
         </Reveal>
         <Reveal delayMs={200}>
           <p className="font-text text-text mt-10 max-w-xl text-tx2">
@@ -145,10 +148,10 @@ export default function App() {
       <div className="lg:pl-96">
 
       {/* I. Positioning */}
-      <GroundSection ground={invert("bone")} id="positioning" className="px-8 md:px-24 py-32">
+      <GroundSection ground={theme} id="positioning" className="px-8 md:px-24 py-32">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={1} label="Positioning" ground={invert("bone")} />
+            <SectionHeader index={1} label="Positioning" ground={theme} />
           </Reveal>
           <div className="grid md:grid-cols-2 gap-16 mt-16">
             <Reveal>
@@ -180,10 +183,10 @@ export default function App() {
       </GroundSection>
 
       {/* II. Colour */}
-      <GroundSection ground={invert("bone")} id="colour" className="px-8 md:px-24 py-32 border-t border-line">
+      <GroundSection ground={theme} id="colour" className="px-8 md:px-24 py-32 border-t border-line">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={2} label="Colour" ground={invert("bone")} />
+            <SectionHeader index={2} label="Colour" ground={theme} />
           </Reveal>
           <Reveal delayMs={150} className="mt-16">
             <SwatchGrid
@@ -209,10 +212,10 @@ export default function App() {
       </GroundSection>
 
       {/* III. Typography */}
-      <GroundSection ground={invert("bone")} id="typography" className="px-8 md:px-24 py-32 border-t border-line">
+      <GroundSection ground={theme} id="typography" className="px-8 md:px-24 py-32 border-t border-line">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={3} label="Typography" ground={invert("bone")} />
+            <SectionHeader index={3} label="Typography" ground={theme} />
           </Reveal>
           <Reveal delayMs={150} className="mt-16">
             <TypeSpecimenRow name="Display 1" family="display" sizeClass="text-display-1" sample="TCG" />
@@ -267,10 +270,10 @@ export default function App() {
       </GroundSection>
 
       {/* V. Motion */}
-      <GroundSection ground={invert("bone")} id="motion" className="px-8 md:px-24 py-32 border-t border-line">
+      <GroundSection ground={theme} id="motion" className="px-8 md:px-24 py-32 border-t border-line">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={5} label="Motion" ground={invert("bone")} />
+            <SectionHeader index={5} label="Motion" ground={theme} />
           </Reveal>
           <Reveal delayMs={150} className="mt-16 max-w-2xl">
             <p className="font-text text-text text-tx">
@@ -288,10 +291,10 @@ export default function App() {
       </GroundSection>
 
       {/* VI. Components */}
-      <GroundSection ground={invert("bone")} id="components" className="px-8 md:px-24 py-32 border-t border-line">
+      <GroundSection ground={theme} id="components" className="px-8 md:px-24 py-32 border-t border-line">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={6} label="Components" ground={invert("bone")} />
+            <SectionHeader index={6} label="Components" ground={theme} />
           </Reveal>
           <Reveal delayMs={150} className="mt-16">
             <StatisticBlock value="17" caption="Governed components" />
@@ -304,16 +307,16 @@ export default function App() {
       </GroundSection>
 
       {/* VII. Contrast & Accessibility */}
-      <GroundSection ground={invert("ink")} id="contrast" className="px-8 md:px-24 py-32">
+      <GroundSection ground={theme} id="contrast" className="px-8 md:px-24 py-32">
         <div className="max-w-[1400px] mx-auto">
           <Reveal>
-            <SectionHeader index={7} label="Contrast & Accessibility" ground={invert("ink")} />
+            <SectionHeader index={7} label="Contrast & Accessibility" ground={theme} />
           </Reveal>
           <Reveal delayMs={150} className="mt-16">
             <ContrastAuditTable />
           </Reveal>
           <Reveal delayMs={300} className="mt-24">
-            <EndorsementLockup ground={invert("ink")} />
+            <EndorsementLockup ground={theme} />
           </Reveal>
         </div>
       </GroundSection>
