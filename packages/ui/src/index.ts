@@ -3,6 +3,7 @@ export { contrastRatio, verdict } from "./contrast";
 
 export { Reveal } from "./components/Reveal";
 export { ThemeToggle } from "./components/ThemeToggle";
+export { PageLink } from "./components/PageLink";
 export { GroundSection, type Ground } from "./components/GroundSection";
 export { SectionHeader } from "./components/SectionHeader";
 export { WordmarkLockup } from "./components/WordmarkLockup";

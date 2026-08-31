@@ -8,6 +8,7 @@ import {
   PullQuote,
   StatisticBlock,
   Reveal,
+  PageLink,
 } from "@tcg/ui";
 
 type FrameProps = PropsWithChildren<{
@@ -38,6 +39,9 @@ function Frame({ name, dimensions, aspect, children }: FrameProps) {
 export default function Applications() {
   return (
     <GroundSection ground="bone" className="min-h-screen px-8 md:px-24 py-24">
+      <PageLink href={import.meta.env.BASE_URL} className="fixed top-6 left-6 z-50">
+        Guidelines
+      </PageLink>
       <main className="max-w-[1400px] mx-auto">
         <Reveal>
           <h1 className="font-display text-display-2 text-tx">Applications</h1>

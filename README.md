@@ -4,7 +4,7 @@ Proprietary and confidential. Brand operating system for The Concrete Group — 
 
 ## Status
 
-Phase 5 of 5 complete: repo scaffold, token system, logo alpha masters, component library, editorial guidelines site, applications, governance, light/dark toggle, accessibility audit.
+Phase 5 of 5 complete: repo scaffold, token system, logo alpha masters, component library, editorial guidelines site, applications, governance, light/dark toggle, accessibility audit, favicon, cross-page navigation, mobile navigation, minimum-size governance.
 
 **Live for external audit:** https://unclepauliees.github.io/concrete-group-brand-os/ · applications: https://unclepauliees.github.io/concrete-group-brand-os/applications.html
 
@@ -94,11 +94,15 @@ Clearspace ≥ ring radius on all sides. Minimum size and the misuse set (recolo
 
 ## Guidelines site
 
-`apps/guidelines/src/App.tsx` — a single-page scroll: a full-bleed ink cover (wordmark lockup, no rail clearance) followed by seven Roman-numeral sections — I. Positioning, II. Colour, III. Typography, IV. Logo, V. Motion, VI. Components, VII. Contrast & Accessibility — alternating bone, green, and ink grounds. A fixed left rail (desktop only, `lg:` and up) tracks scroll position via `IntersectionObserver` and lets you jump to any section; the numbered sections carry `lg:pl-96` so their content never sits underneath the fixed rail.
+`apps/guidelines/src/App.tsx` — a single-page scroll: a full-bleed ink cover (wordmark lockup, no rail clearance) followed by seven Roman-numeral sections — I. Positioning, II. Colour, III. Typography, IV. Logo, V. Motion, VI. Components, VII. Contrast & Accessibility — alternating bone, green, and ink grounds. A fixed left rail (desktop only, `lg:` and up) tracks scroll position via `IntersectionObserver` and lets you jump to any section; the numbered sections carry `lg:pl-96` so their content never sits underneath the fixed rail. Below `lg`, `RailNav`'s `orientation="horizontal"` variant renders the same seven numerals as a bottom-fixed bar with its own solid ground-matched backdrop (labels are `aria-label` only at this size, not visible text — there isn't room); `<main>` carries `pb-14 lg:pb-0` so scrolled content clears it.
 
-A fixed top-right `ThemeToggle` swaps bone↔ink across every section's own ground for a Light/Dark version of the whole site, without flattening the designed alternation — house green stays the chromatic constant either way, and grounds that exist purely to demonstrate the three canonical tokens (the logo's ink/bone/green trio, swatches, ramps, the contrast audit's fixed pairs) stay literal on purpose, since inverting those would misrepresent the tokens they're documenting.
+A fixed top-right `ThemeToggle` swaps bone↔ink across every section's own ground for a Light/Dark version of the whole site, without flattening the designed alternation — house green stays the chromatic constant either way, and grounds that exist purely to demonstrate the three canonical tokens (the logo's ink/bone/green trio, swatches, ramps, the contrast audit's fixed pairs) stay literal on purpose, since inverting those would misrepresent the tokens they're documenting. The choice persists to `localStorage` (`tcg-dark`) so a reload doesn't reset to Light.
+
+A fixed top-left `PageLink` connects the guidelines site and `applications.html` to each other — without it, Applications was only reachable by guessing the URL, since Vite's second entry point isn't discoverable any other way.
 
 The site carries a real heading outline for screen readers — `SectionHeader`'s label renders as an `<h2>` (the Roman numeral is `aria-hidden`, redundant with heading order) and the cover's `WordmarkLockup` renders `as="h1"` — plus a `<main>` landmark. `Applications.tsx` follows the same rule: each application's name (`Frame`'s caption) is the real `<h2>`; illustrative mockup copy inside a frame (e.g. `[Property Name]`) is a plain `<p>`, since it's sample content, not page structure.
+
+Both pages carry a favicon built from the governed monogram (`scripts/build-favicon.mjs`, ink mark on bone-pure, clearspace mirrored at icon scale) — `favicon-32.png`, `apple-touch-icon.png` (180px), `favicon-512.png`. Runs as part of `npm run logo:build`, so it stays in sync whenever the source artwork changes.
 
 ## Applications
 

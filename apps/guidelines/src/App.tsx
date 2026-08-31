@@ -19,6 +19,7 @@ import {
   TypeSpecimenRow,
   Reveal,
   ThemeToggle,
+  PageLink,
   type Ground,
 } from "@tcg/ui";
 
@@ -70,7 +71,12 @@ export default function App() {
   // flattening it — house green stays the chromatic constant either way.
   // Grounds used purely to demonstrate the three canonical tokens (the
   // logo's ink/bone/green trio, swatches, ramps) stay literal on purpose.
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("tcg-dark") === "true"
+  );
+  useEffect(() => {
+    localStorage.setItem("tcg-dark", String(dark));
+  }, [dark]);
   const invert = (g: Ground): Ground => (dark ? (g === "bone" ? "ink" : g === "ink" ? "bone" : g) : g);
   const activeGround = invert(baseGround);
 
@@ -85,7 +91,7 @@ export default function App() {
     <div className="min-h-screen">
       <a
         href="#positioning"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-bone focus:text-ink focus:px-4 focus:py-2 font-label text-label uppercase"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:bg-bone focus:text-ink focus:px-4 focus:py-2 font-label text-label uppercase"
       >
         Skip to content
       </a>
@@ -98,9 +104,25 @@ export default function App() {
         className="hidden lg:flex fixed left-10 top-1/2 -translate-y-1/2 z-40"
       />
 
+      {/* Mobile equivalent: numerals only, fixed to the bottom edge, with its
+          own solid backdrop since it sits flush against the viewport rather
+          than floating over content like the desktop rail does. */}
+      <RailNav
+        sections={SECTIONS.map((s) => s.label)}
+        activeIndex={activeIndex}
+        onSelect={scrollTo}
+        ground={activeGround}
+        orientation="horizontal"
+        className="flex lg:hidden fixed bottom-0 inset-x-0 z-40"
+      />
+
       <ThemeToggle dark={dark} onToggle={() => setDark((d) => !d)} className="fixed top-6 right-6 z-50" />
 
-      <main>
+      <PageLink href={`${import.meta.env.BASE_URL}applications.html`} className="fixed top-6 left-6 z-50">
+        Applications
+      </PageLink>
+
+      <main className="pb-14 lg:pb-0">
       {/* Cover — full-bleed, not offset for rail clearance; the rail floats
           over it exactly as it does over any other ground. */}
       <GroundSection ground={invert("ink")} className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
@@ -231,6 +253,7 @@ export default function App() {
           </Reveal>
           <Reveal delayMs={350} className="mt-12">
             <LaneIndexRow label="Clearspace" value="≥ ring radius" />
+            <LaneIndexRow label="Minimum size" value="64px digital · 0.375in print" />
             <LaneIndexRow label="Approved grounds" value="Ink, bone, house green" />
           </Reveal>
           <Reveal delayMs={450} className="mt-16">
